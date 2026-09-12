@@ -74,7 +74,6 @@ body {
   gap: 1rem;
   align-items: center;
   width: fit-content;
-  
 }
 
 .card__price-new {
@@ -122,6 +121,7 @@ body {
 .card__picture {
   display: block;
   width: 100%;
+  aspect-ratio: 700 / 684;
 }
 
 .card__image {
