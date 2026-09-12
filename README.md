@@ -1,105 +1,126 @@
-# Frontend Mentor - Product preview card component
+# Frontend Mentor - Product preview card component solution
 
-![Design preview for the Product preview card component coding challenge](./design/desktop-preview.jpg)
+This is a solution to the [Product preview card component challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/product-preview-card-component-GO7UmttRfa).
 
-## Welcome! 👋
+## Table of contents
 
-Thanks for checking out this front-end coding challenge.
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+  - [AI Collaboration](#ai-collaboration)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects.
+## Overview
 
-**To do this challenge, you need a basic understanding of HTML and CSS.**
+### The challenge
 
-## The challenge
-
-Your challenge is to build out this product preview card component and get it looking as close to the design as possible.
-
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
-
-Your users should be able to:
+Users should be able to:
 
 - View the optimal layout depending on their device's screen size
 - See hover and focus states for interactive elements
 
-### Want some support on the challenge? 
+### Screenshot
 
-[Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+![Preview card mobile](images/mobile.png)
+![Preview card desktop](images/desktop.png)
 
-## Where to find everything
+### Links
 
-Your task is to build out the project to the designs inside the `/design` folder. You will find both a mobile and a desktop version of the design. 
+- Solution URL: [https://github.com/Qusbee/preview-card](https://github.com/Qusbee/preview-card)
+- Live Site URL: [https://qusbee.github.io/preview-card/](https://qusbee.github.io/preview-card/)
 
-The designs are in JPG static format. Using JPGs will mean that you'll need to use your best judgment for styles such as `font-size`, `padding` and `margin`. 
+## My process
 
-If you would like the Figma design file to gain experience using professional tools and build more accurate projects faster, you can [subscribe as a PRO member](https://www.frontendmentor.io/pro).
+### Built with
 
-You will find all the required assets in the `/images` folder. The assets are already optimized.
+- Semantic HTML5 markup
+- CSS custom properties
+- Flexbox
+- Mobile-first workflow
+- `<picture>` element for art direction
 
-There is also a `style-guide.md` file containing the information you'll need, such as color palette and fonts.
+### What I learned
 
-## Using AI coding assistants
+**Swapping images with `<picture>` instead of CSS.** The challenge ships two different crops of the product photo, so this is art direction, not just resolution switching. Using `<picture>` with a `media` query on `<source>` keeps a single `<img>` in the markup — one `alt`, one element for the browser to load — and the browser picks the right file before it starts downloading:
 
-We've included two files to help you if you're using AI coding assistants (like Claude, GitHub Copilot, Cursor, etc.) while working on this challenge:
+```html
+<picture class="card__picture">
+  <source media="(min-width: 600px)" srcset="images/image-product-desktop.jpg">
+  <img class="card__image" src="images/image-product-mobile.jpg" alt="Gabrielle Essence Eau De Parfum">
+</picture>
+```
 
-- `AGENTS.md` - Contains detailed instructions for AI assistants on how to help you with this challenge. It's tailored to this challenge's difficulty level, so the AI will provide guidance appropriate to your learning stage—offering more support for beginner challenges and encouraging more independence on advanced ones.
-- `CLAUDE.md` - A pointer file that directs Claude-based tools to the AGENTS.md instructions.
+**Reserving space with `aspect-ratio`.** Before I added this, the card visibly jumped as soon as the image finished loading. Giving the wrapper the image's own ratio and letting the image fill it with `object-fit: cover` removed the layout shift completely:
 
-**How to use them:** You don't need to do anything! These files are automatically detected by most AI coding tools. The AI will read them and adjust its behavior to be a better learning partner—guiding you toward solutions rather than just giving you the answers.
+```css
+.card__picture {
+  display: block;
+  width: 100%;
+  aspect-ratio: 700 / 684;
+}
 
-**Note:** These files are designed to help you *learn*, not to do the work for you. The AI is instructed to ask questions, give hints, and explain concepts rather than writing complete solutions.
+.card__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+```
 
-## Building your project
+**Choosing the right semantic element for the old price.** My first version used a `<span>` with a line-through. `<del>` says the same thing to a screen reader that the strikethrough says visually — this price no longer applies:
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+```html
+<div class="card__price">
+  <span class="card__price-new">$149.99</span>
+  <del class="card__price-old">$169.99</del>
+</div>
+```
 
-1. Initialize your project as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/).
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+**`:focus-visible` alongside `:hover`.** Styling both in one rule means keyboard users get the same clear state as mouse users, without a focus ring appearing on every mouse click.
 
-## Deploying your project
+**Small things that added up:** `100dvh` instead of `100vh` so mobile browser chrome doesn't cut off the centering; `rem` for sizes so the layout respects the user's font settings; custom properties for the whole palette, which made the style guide colors a one-time transcription instead of numbers scattered through the file.
 
-As mentioned above, there are many ways to host your project for free. Our recommended hosts are:
+### Continued development
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+- **Breakpoint choice.** I used `600px` because that's where the card stops looking cramped, not because it matches a device. I want to get more comfortable picking breakpoints from the content and eventually try `clamp()` and container queries instead of media queries where they fit.
+- **Fluid typography.** Font sizes are still fixed per breakpoint. I'd like to try scaling them fluidly.
+- **BEM discipline.** The naming holds up here, but this is a single component. I want to see how it behaves on a page with several blocks.
+- **Accessibility.** Basic focus and semantics are covered; next I want to actually test with a screen reader rather than assuming.
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://www.frontendmentor.io/guides/hosting-your-solution).
+### Useful resources
 
-## Create a custom `README.md`
+- [MDN — `<picture>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture) - Explained the difference between art direction and resolution switching, which is what made me pick `<picture>` over a CSS background swap.
+- [MDN — `aspect-ratio`](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio) - Helped me fix the layout shift on image load.
+- [MDN — `:focus-visible`](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible) - Clarified why it's better than plain `:focus` for hover-style states.
+- [CSS Tricks — A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) - My go-to reference for `gap`, alignment and direction switching.
+- [BEM — Naming](https://en.bem.info/methodology/naming-convention/) - Kept my class names consistent throughout.
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+### AI Collaboration
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+I used **Claude (Claude Code)** on this project, mostly as a reviewer rather than a code generator. The repo has an `AGENTS.md` file that sets the ground rules: explain, don't hand over finished code.
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+How I used it:
 
-## Submitting your solution
+- **Code review after each step.** I wrote the markup and CSS myself, then asked for feedback. That's how the heading hierarchy fix and the switch to `<del>` came about.
+- **Understanding the "why".** When it suggested `aspect-ratio` for the layout shift, I asked it to explain what was actually happening in the browser instead of just taking the snippet.
+- **Naming and structure.** Useful as a second opinion on BEM class names and on whether a wrapper element was earning its place.
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://www.frontendmentor.io/guides/how-to-submit-solutions) for tips on how to do this.
+What worked well: having something to explain a concept at exactly the moment I hit it, and catching semantic mistakes I couldn't see myself.
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+What didn't: when I asked broad questions ("is this good?"), I got broad answers. It's far more useful with a specific question about a specific line. It also tends to suggest more abstraction than a component this size needs — I turned down a few refactors.
 
-## Sharing your solution
+## Author
 
-There are multiple places you can share your solution:
+- Frontend Mentor - [@Qusbee](https://www.frontendmentor.io/profile/Qusbee)
+- GitHub - [@Qusbee](https://github.com/Qusbee)
 
-1. Share your solution page in the **#finished-projects** channel of the [community](https://www.frontendmentor.io/community). 
-2. Share on [X (formerly Twitter)](https://x.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in your post. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on [LinkedIn](https://www.linkedin.com/company/frontend-mentor/).
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+## Acknowledgments
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
-
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
-
-## Got feedback for us?
-
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
-
-This challenge is completely free. Please share it with anyone who will find it useful for practice.
-
-**Have fun building!** 🚀
+Thanks to Frontend Mentor for the challenge and the design files — having a real design to match is what makes the small details (letter spacing, line height, exact paddings) worth chasing.
